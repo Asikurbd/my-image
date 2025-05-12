@@ -3,24 +3,39 @@
 <link href="https://asikurbd.github.io/css/gt-page.css" rel="stylesheet" type="text/css"/>
 <title>AR Files Gallery</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+  .div {
+    padding: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #f5f5f5;
+    text-align: center;
+  }
   .gallery {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 15px;
-    padding: 20px;
+    padding: 15px;
+    max-width: 1000px;
+    margin: 0 auto;
   }
   .gallery-item {
     cursor: pointer;
     transition: transform 0.2s;
+    aspect-ratio: 1/1;
   }
   .gallery-item:hover {
     transform: scale(1.05);
   }
   .gallery-item img {
     width: 100%;
-    height: 150px;
+    height: 100%;
     object-fit: cover;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
@@ -39,12 +54,13 @@
   .modal-content {
     display: block;
     margin: auto;
-    max-width: 90%;
-    max-height: 90%;
+    max-width: 95%;
+    max-height: 95%;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    object-fit: contain;
   }
   .close {
     position: absolute;
@@ -65,6 +81,13 @@
     cursor: pointer;
     padding: 16px;
     user-select: none;
+    background-color: rgba(0,0,0,0.3);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .prev {
     left: 20px;
@@ -79,13 +102,28 @@
     right: 0;
     text-align: center;
     color: white;
-    font-size: 18px;
+    font-size: 16px;
+    padding: 10px;
+    background-color: rgba(0,0,0,0.5);
+  }
+
+  @media (max-width: 600px) {
+    .gallery {
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px;
+      padding: 10px;
+    }
+    .nav-btn {
+      font-size: 30px;
+      width: 40px;
+      height: 40px;
+    }
   }
 </style>
 </head>
 
 <body>          
-  <div class="div"><center>AR Files Gallery</center></div>
+  <div class="div">AR Files Gallery</div>
   <div class="gallery" id="gallery"></div>
   
   <div id="modal" class="modal">
@@ -109,10 +147,10 @@
       const prevBtn = document.getElementsByClassName('prev')[0];
       const nextBtn = document.getElementsByClassName('next')[0];
       
-      // Filter for image files
-      const imageFiles = data.filter(file => 
-        file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i)
-      );
+      // Filter for image files and sort by upload date (newest first)
+      const imageFiles = data
+        .filter(file => file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i))
+        .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
       
       if (imageFiles.length === 0) {
         gallery.innerHTML = '<p>No images found in the repository.</p>';
@@ -144,12 +182,11 @@
         modal.style.display = "block";
         modalImg.src = imageFiles[currentIndex].download_url;
         caption.textContent = imageFiles[currentIndex].name;
-        document.body.style.overflow = "hidden"; // Prevent scrolling
+        document.body.style.overflow = "hidden";
       }
       
       function navigate(direction) {
         currentIndex += direction;
-        // Wrap around if at beginning or end
         if (currentIndex >= imageFiles.length) {
           currentIndex = 0;
         } else if (currentIndex < 0) {
@@ -159,32 +196,28 @@
         caption.textContent = imageFiles[currentIndex].name;
       }
       
-      // Close modal when clicking X
       closeBtn.onclick = function() {
         modal.style.display = "none";
-        document.body.style.overflow = "auto"; // Re-enable scrolling
+        document.body.style.overflow = "auto";
       }
       
-      // Close modal when clicking outside image
       modal.onclick = function(event) {
         if (event.target === modal) {
           modal.style.display = "none";
-          document.body.style.overflow = "auto"; // Re-enable scrolling
+          document.body.style.overflow = "auto";
         }
       }
       
-      // Navigation buttons
       prevBtn.onclick = function(e) {
-        e.stopPropagation(); // Prevent modal close
+        e.stopPropagation();
         navigate(-1);
       }
       
       nextBtn.onclick = function(e) {
-        e.stopPropagation(); // Prevent modal close
+        e.stopPropagation();
         navigate(1);
       }
       
-      // Keyboard navigation
       document.addEventListener('keydown', function(e) {
         if (modal.style.display === "block") {
           if (e.key === 'ArrowLeft') {
