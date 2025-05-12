@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
   body {
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
     font-family: Arial, sans-serif;
   }
@@ -17,6 +17,7 @@
     background-color: #f5f5f5;
     text-align: center;
   }
+  .div2 {border-radius:4px;padding: 8px; font-weight: bold; background-color:#047448;font-size: 20px;color:#fff; }
   .gallery {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -72,22 +73,28 @@
     cursor: pointer;
   }
   .nav-btn {
-    position: absolute;
+    position: fixed;
     top: 50%;
     transform: translateY(-50%);
     color: white;
-    font-size: 40px;
+    font-size: 30px;
     font-weight: bold;
     cursor: pointer;
-    padding: 16px;
+    padding: 15px;
     user-select: none;
-    background-color: rgba(0,0,0,0.3);
+    background-color: rgba(0,0,0,0.5);
     border-radius: 50%;
     width: 50px;
     height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1001;
+    border: none;
+    outline: none;
+  }
+  .nav-btn:hover {
+    background-color: rgba(0,0,0,0.8);
   }
   .prev {
     left: 20px;
@@ -96,7 +103,7 @@
     right: 20px;
   }
   .caption {
-    position: absolute;
+    position: fixed;
     bottom: 20px;
     left: 0;
     right: 0;
@@ -105,31 +112,34 @@
     font-size: 16px;
     padding: 10px;
     background-color: rgba(0,0,0,0.5);
+    z-index: 1001;
   }
 
-  @media (max-width: 600px) {
-    .gallery {
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 10px;
-      padding: 10px;
-    }
+  @media (max-width: 768px) {
     .nav-btn {
-      font-size: 30px;
       width: 40px;
       height: 40px;
+      font-size: 24px;
+      padding: 10px;
+    }
+    .prev {
+      left: 10px;
+    }
+    .next {
+      right: 10px;
     }
   }
 </style>
 </head>
 
 <body>          
-  <div class="div">AR Files Gallery</div>
+  <div class="div2" style="text-align:center;">AR Files Gallery</div>
   <div class="gallery" id="gallery"></div>
   
   <div id="modal" class="modal">
     <span class="close">&times;</span>
-    <span class="nav-btn prev">&lt;</span>
-    <span class="nav-btn next">&gt;</span>
+    <button class="nav-btn prev">&lt;</button>
+    <button class="nav-btn next">&gt;</button>
     <img class="modal-content" id="modal-image">
     <div class="caption" id="caption"></div>
   </div>
@@ -216,6 +226,28 @@
       nextBtn.onclick = function(e) {
         e.stopPropagation();
         navigate(1);
+      }
+      
+      // Touch events for mobile swipe navigation
+      let touchStartX = 0;
+      let touchEndX = 0;
+      
+      modal.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+      }, false);
+      
+      modal.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      }, false);
+      
+      function handleSwipe() {
+        if (touchEndX < touchStartX - 50) {
+          navigate(1); // Swipe left - next
+        }
+        if (touchEndX > touchStartX + 50) {
+          navigate(-1); // Swipe right - previous
+        }
       }
       
       document.addEventListener('keydown', function(e) {
