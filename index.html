@@ -134,6 +134,39 @@
 
 <body>          
   <div class="div2" style="text-align:center;">AR Files Gallery</div>
+
+<center> 
+    <input type="url" id="urlInput" value="https://github.com/Asikurbd/my-image/delete/main/">
+    <button onclick="goToUrl()">Go</button>
+</center>
+
+<br>
+    <script>
+        function goToUrl() {
+            let url = document.getElementById('urlInput').value.trim();
+            
+            // Add https:// if no protocol is specified
+            if (!url.startsWith('http://') && !url.startsWith('https://') && url !== '') {
+                url = 'https://' + url;
+            }
+            
+            // Navigate to the URL if valid
+            if (url !== '' && url !== 'https://') {
+                window.location.href = url;
+            } else {
+                alert('Please enter a valid URL');
+            }
+        }
+
+        // Allow pressing Enter key to submit
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                goToUrl();
+            }
+        });
+    </script>
+
+  
   <div class="gallery" id="gallery"></div>
   
   <div id="modal" class="modal">
