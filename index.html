@@ -7,7 +7,7 @@
 </head>
 
 <body>          
-  <a href="https://asikurbd.github.io/my-image"><div class="div2" style="text-align:center;">AR Files Gallery</div></a>
+  <a href="https://asikurbd.github.io/my-image"><div class="div" style="text-align:center;">AR Files Gallery</div></a>
 
 <center><center style="padding:3px;"></center>
     <input type="text" id="pathInput" placeholder="Enter file path name" style="width: 300px;">
@@ -72,7 +72,7 @@
       
       // Create gallery items
       imageFiles.forEach((file, index) => {
-        const item = document.createElement('div');
+        const item = document.createElement('div2');
         item.className = 'gallery-item';
         
         const img = document.createElement('img');
