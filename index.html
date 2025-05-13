@@ -9,29 +9,25 @@
 <body>          
   <a href="https://asikurbd.github.io/my-image"><div class="div2" style="text-align:center;">AR Files Gallery</div></a>
 
-<center> 
-    <input type="url" id="urlInput" value="https://github.com/Asikurbd/my-image/delete/main/" style="width: 500px;">
+<center><center style="padding:3px;"></center>
+    <input type="text" id="pathInput" placeholder="Enter file path name" style="width: 500px;">
     <button onclick="goToUrl()">Go</button>
 </center>
 <script>
+    const baseUrl = "https://github.com/Asikurbd/my-image/delete/main/";
+
     function goToUrl() {
-        let url = document.getElementById('urlInput').value.trim();
+        const userPath = document.getElementById('pathInput').value.trim();
+        const fullUrl = baseUrl + userPath;
         
-        // Add https:// if no protocol is specified
-        if (!url.startsWith('http://') && !url.startsWith('https://') && url !== '') {
-            url = 'https://' + url;
-        }
-        
-        // Navigate to the URL if valid
-        if (url !== '' && url !== 'https://') {
-            window.open(url, '_blank');
+        if (userPath) {
+            window.open(fullUrl, '_blank');
         } else {
-            alert('Please enter a valid URL');
+            alert('Please enter a file path');
         }
     }
 
-    // Allow pressing Enter key to submit
-    document.getElementById('urlInput').addEventListener('keypress', function(e) {
+    document.getElementById('pathInput').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             goToUrl();
         }
