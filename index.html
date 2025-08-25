@@ -16,7 +16,7 @@
   (async () => {
     const response = await fetch('https://api.github.com/repos/asikurbd/my-image/contents/');
     const data = await response.json();      
-    let htmlString = '<a href=""><div style="text-align: center;"><div class="div"><center>AR Files Gallery</center></div></a><br>';        
+    let htmlString = '<div class="div"><center>AR Files Gallery</center></div><br>';        
     
     for (let file of data) {
       // Check if file is an image (simple extension check)
